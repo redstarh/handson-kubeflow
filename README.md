@@ -20,28 +20,19 @@ local 진행이기 때문에 kubeflow설치를 위해 minikube를 사용합니�
 - Deploying Kubeflow on Existing Clusters  
 - Kubeflow Deployment with kfctl_k8s_istio
     ```
-    $ wget https://github.com/kubeflow/kubeflow/releases/download/v0.6.2/kfctl_v0.6.2_darwin.tar.gz
-    $ tar -xvf kfctl_v0.6.2_darwin.tar.gz
-    
-    # Add kfctl to PATH, to make the kfctl binary easier to use.
-    # Use only alphanumeric characters or - in the directory name.
-    $ export PATH=$PATH:"<path-to-kfctl>"
-    $ export KFAPP="<your-choice-of-application-directory-name>"
-    
-    # Installs Istio by default. Comment out Istio components in the config file to skip Istio installation. See https://github.com/kubeflow/kubeflow/pull/3663
-    $ export CONFIG="https://raw.githubusercontent.com/kubeflow/kubeflow/v0.6-branch/bootstrap/config/kfctl_k8s_istio.0.6.2.yaml"
-    
-    $ kubectl create ns kubeflow-anonymous
-    $ kfctl init ${KFAPP} --config=${CONFIG} -V
-    $ cd ${KFAPP}
-    $ kfctl generate all -V
-    $ kfctl apply all -V    
-    
-    $ k get po -n kubeflow
-    
-    
-    
-    
+    1. minikube install(Install 전 Docker Preference CPU/Mem Resize)
+       $ minikube start --kubernetes-version v1.19.3 --cpus 4 --memory 8096 --disk-size=40g --insecure-registry handson-registry:15000
+
+    2. kfctl install
+       $ wget https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_darwin.tar.gz
+       $ tar -xvf kfctl_v1.2.0-0-gbc038f9_darwin.tar.gz
+       $ mv ./kfctl /usr/local/bin/kfctl
+       $ export CONFIG="https://raw.githubusercontent.com/kubeflow/manifests/v1.1-branch/kfdef/kfctl_k8s_istio.v1.1.0.yaml"
+       $ kubectl create ns kubeflow-redstar
+       $ kfctl apply -V --file=${CONFIG}
+       $ cd ${KFAPP}
+       $ kubectl get po -n kubeflow
+           
     # https://github.com/istio/istio/issues/10795 port issue
     ```
 
